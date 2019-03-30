@@ -6,6 +6,9 @@ function saveBookmark(e) {
   var siteName = document.querySelector('#contact-name').value;
   var siteEmail = document.querySelector('#contact-email').value;
   var siteMes = document.querySelector('#contact-message').value;
+  if (!validateForm(siteName, siteEmail,siteMes)) {
+    return false;
+  }
 
   var info = {
     name: siteName,
@@ -21,6 +24,9 @@ function saveBookmark(e) {
     infos.push(info);
     localStorage.setItem('infos', JSON.stringify(infos));
   }
+  document.querySelector('#contact-name').value = '';
+  document.querySelector('#contact-email').value = '';
+  document.querySelector('#contact-message').value = '';
 
   fetchInfos();
 }
@@ -39,9 +45,9 @@ function deleteBookmark(name,mail) {
 }
 
 function fetchInfos() {
-  var infos = JSON.parse(localStorage.getItem('infos'));
+  const infos = JSON.parse(localStorage.getItem('infos'));
 
-  var infosResults = document.querySelector('#copyright');
+  const infosResults = document.querySelector('#copyright');
 
   infosResults.innerHTML = '';
 
@@ -51,6 +57,7 @@ function fetchInfos() {
     var name = infos[i].name;
     var email = infos[i].mail;
     var mes = infos[i].mes;
+    console.log(name);
     str += '<table>'
       + `<tr style="width : 100%">`
       + `<th style="width : 25%">`
@@ -74,6 +81,16 @@ function fetchInfos() {
   str += '</table>'
 
   infosResults.innerHTML = str;
+}
+function validateForm(siteName, siteEmail,siteMes) {
+  if (!siteName || !siteEmail || !siteMes) {
+    alert('Please fill in all data fields');
+    return false;
+  }
+
+  var expURL = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+  var regexURL = new RegExp(expURL);
+  return true;
 }
 
 
